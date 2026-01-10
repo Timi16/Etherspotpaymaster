@@ -31,7 +31,7 @@ contract EtherspotPaymaster is BasePaymaster, Whitelist, ReentrancyGuard {
 
     event SponsorSuccessful(address paymaster, address sender);
 
-    constructor(IEntryPoint _entryPoint, address _owner) BasePaymaster(_entryPoint) Ownable(_owner) {}
+    constructor(IEntryPoint _entryPoint) BasePaymaster(_entryPoint) {}
 
     function depositFunds() external payable nonReentrant {
         _creditSponsor(msg.sender, msg.value);
