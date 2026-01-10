@@ -2,5 +2,19 @@
 src = "src"
 out = "out"
 libs = ["lib"]
+solc_version = "0.8.28"
+optimizer = true
+optimizer_runs = 200
+via_ir = false
+gas_price = 2000000000
+legacy = true
+
+# RPC endpoints
+[rpc_endpoints]
+zerog = "${RPC_URL}"
+
+# Etherscan configuration for 0G Network
+[etherscan]
+zerog = { key = "${ETHERSCAN_API_KEY}", url = "https://chainscan.0g.ai/api" }
 
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
