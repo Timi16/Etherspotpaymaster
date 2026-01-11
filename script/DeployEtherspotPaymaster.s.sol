@@ -6,10 +6,11 @@ import "../src/paymaster/EtherspotPaymaster.sol";
 
 contract DeployEtherspotPaymaster is Script {
     function run() external {
-        // Load the EntryPoint address for the chain you're deploying to
-        // For 0G Network, you'll need to check if they have an EntryPoint deployed
-        // or deploy one first. This is a placeholder address.
-        address entryPointAddress = vm.envOr("ENTRYPOINT_ADDRESS", address(0x0000000071727De22E5E9d8BAf0edAc6f37da032));
+        // Load the EntryPoint address for 0G Network
+        address entryPointAddress = vm.envOr("ENTRYPOINT_ADDRESS", address(0x58F33cEBF1FF088Cc1c0cD5B440EB2fDf5a60438));
+        
+        // New owner address
+        address newOwner = 0x492deFEA4C0CA5DD819dE868357081B46adC1F04;
         
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         address deployer = vm.addr(deployerPrivateKey);
@@ -17,6 +18,7 @@ contract DeployEtherspotPaymaster is Script {
         console.log("Deploying EtherspotPaymaster...");
         console.log("Deployer address:", deployer);
         console.log("EntryPoint address:", entryPointAddress);
+        console.log("New Owner address:", newOwner);
 
         vm.startBroadcast(deployerPrivateKey);
 
@@ -24,6 +26,12 @@ contract DeployEtherspotPaymaster is Script {
         EtherspotPaymaster paymaster = new EtherspotPaymaster(
             IEntryPoint(entryPointAddress)
         );
+
+        // Transfer ownership to the new owner if different from deployer
+        if (deployer != newOwner) {
+            console.log("Transferring ownership to:", newOwner);
+            paymaster.transferOwnership(newOwner);
+        }
 
         vm.stopBroadcast();
 
@@ -37,7 +45,8 @@ contract DeployEtherspotPaymaster is Script {
         string memory deploymentInfo = string.concat(
             "EtherspotPaymaster: ", vm.toString(address(paymaster)), "\n",
             "EntryPoint: ", vm.toString(entryPointAddress), "\n",
-            "Owner: ", vm.toString(deployer), "\n",
+            "Owner: ", vm.toString(newOwner), "\n",
+            "Deployer: ", vm.toString(deployer), "\n",
             "Chain ID: ", vm.toString(block.chainid), "\n",
             "Block Number: ", vm.toString(block.number)
         );
